@@ -10,12 +10,12 @@ import 'Recognition.dart';
 class Recognizer {
   late Interpreter interpreter;
   late InterpreterOptions _interpreterOptions;
-  static const int WIDTH = 112;
-  static const int HEIGHT = 112;
+  static const int WIDTH = 160;
+  static const int HEIGHT = 160;
   final dbHelper = DatabaseHelper();
   Map<String,Recognition> registered = Map();
   @override
-  String get modelName => 'assets/mobile_face_net.tflite';
+  String get modelName => 'assets/facenet.tflite';
 
   Recognizer({int? numThreads}) {
     _interpreterOptions = InterpreterOptions();
@@ -69,8 +69,8 @@ class Recognizer {
     List<double> flattenedList = resizedImage.data!.expand((channel) => [channel.r, channel.g, channel.b]).map((value) => value.toDouble()).toList();
     Float32List float32Array = Float32List.fromList(flattenedList);
     int channels = 3;
-    int height = 112;
-    int width = 112;
+    int height = 160;
+    int width = 160;
     Float32List reshapedArray = Float32List(1 * height * width * channels);
     for (int c = 0; c < channels; c++) {
       for (int h = 0; h < height; h++) {
@@ -80,7 +80,7 @@ class Recognizer {
         }
       }
     }
-    return reshapedArray.reshape([1,112,112,3]);
+    return reshapedArray.reshape([1,160,160,3]);
   }
 
   Recognition recognize(img.Image image,Rect location) {
@@ -90,7 +90,7 @@ class Recognizer {
     print(input.shape.toString());
 
     //TODO output array
-    List output = List.filled(1*192, 0).reshape([1,192]);
+    List output = List.filled(1*512, 0).reshape([1,512]);
 
     //TODO performs inference
     final runs = DateTime.now().millisecondsSinceEpoch;
